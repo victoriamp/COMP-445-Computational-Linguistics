@@ -1,0 +1,309 @@
+\documentclass[10pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb, graphicx, multicol, array}
+ \usepackage{listings}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{url}
+\usepackage[variablett]{lmodern}
+ 
+\lstset{
+ basicstyle=\ttfamily,
+ columns=fullflexible,
+ upquote,
+ keepspaces,
+ literate={*}{{\char42}}1
+ {-}{{\char45}}1
+}
+
+\begin{document}
+ 
+\title{LING/COMP 445, LING 645\\Problem Set 1}
+\date{}
+\maketitle
+
+
+There are several types of questions below. For programming questions,
+please put your answers into a file called
+\texttt{lastname-firstname.clj}. Be careful to follow the instructions
+exactly and be sure that all of your function definitions use the
+precise names, number of inputs and input types, and output types as
+requested in each question.
+
+To do the computational problems, we recommend that you install
+Clojure on your local machine and write and debug the answers to each
+problem in a local copy of \texttt{lastname-firstname.clj}. You can
+find information about installing and using Clojure here
+\url{https://clojure.org/}.
+
+For questions involving answers in English or mathematics or a
+combination of the two, put your answers to the question in an
+\textbf{Answer} section like in the example below. You can find more
+information about \LaTeX\ here \url{https://www.latex-project.org/}.
+
+Once you have answered the question, please compile your copy of this
+\LaTeX into a PDF and submit (i) the compiled PDF (ii) the raw \LaTex
+file and (iii) your \texttt{lastname-firstname.clj} via email to
+\emph{both} \email{timothy.odonnell@mcgill.ca} and
+\email{savanna.willerton@mail.mcgill.ca}. Please make sure all of your
+code compiles and runs, we cannot give partial credit for code that
+won't run at all.
+
+
+\hrulefill
+\paragraph{Problem 0:}
+This is an example question using some fake math like this
+$L=\sum_0^{\infty} \mathcal{G} \delta_x$.
+
+\paragraph{Answer 0:} Put your answer right under the question like
+this $L=\sum_0^{\infty} \mathcal{G} \delta_x$.
+
+
+\hrulefill
+\paragraph{Problem 1:}
+Write a procedure called \texttt{abs} that takes in a number, and
+computes the absolute value of the number. It should do this by
+finding the square root of the square of the argument. (Note: you
+should use the \texttt{Math/sqrt} procedure built in to Clojure, which
+returns the square root of a number.)
+
+\paragraph{Answer 1:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 2:}
+In both of the following procedure definitions, there are one or more errors of
+some kind. Explain what's wrong and why, and fix it:
+
+\begin{lstlisting}
+(defn take-square
+  (* x x))
+\end{lstlisting}
+
+\begin{lstlisting}
+(defn sum-of-squares [(take-square x) (take-square y)]
+  (+ (take-square x) (take-square y)))
+\end{lstlisting}
+
+\paragraph{Answer 2:} Fixed functions are in
+\texttt{victoria-pittard.clj}. Here, \textbf{take-square} attempts to define a function that takes the square of a number \textit{x} by multiplying it by itself. However, it fails to indicate what the input is (function declarations involve the \textbf{defn} keyword, followed by the function name, inputs, and function definition). Next, \textbf{sum-of-squares} attempts to add the squares of two numbers, \textit{x} and \textit{y}. While the inputs are indicated in the function declaration, they are not indicated correctly - this function takes each number to the fourth power, as it takes the square of each value as the input. This can be corrected by using \textit{x} and \textit{y} as inputs, rather than the square of each.
+
+\hrulefill
+\paragraph{Problem 3:}
+The expression \texttt{(+ 11 2)} has the value \texttt{13}. Write four
+other different Clojure expressions whose values are also the number
+\texttt{13}.  Using \texttt{def} name these expressions
+\texttt{exp-13-1}, \texttt{exp-13-2}, \texttt{exp-13-3}, and
+\texttt{exp-13-4}.
+
+\paragraph{Answer 3:} Answer in \texttt{victoria-pittard.clj}. Expressions can equate to value 13 in many ways, most simply through addition of various numbers such that they equal 13. For example, 12 + 1, 10 + 3, 9 + 4, and 8 + 5 all equal 13, and can be represented in clojure using \textbf{def} and \textbf{'} as follows:
+\begin{lstlisting}
+(def exp-13-1 '(+ 12 1))
+(def exp-13-2 '(+ 10 3))
+(def exp-13-3 '(+ 9 4))
+(def exp-13-4 '(+ 8 5))
+\end{lstlisting}
+
+\hrulefill
+\paragraph{Problem 4:}
+  Write a procedure, called \texttt{third}, that selects the third
+  element of a list. For example, given the list \texttt{'(4 5 6)},
+  third should return the number \texttt{6}.
+
+\paragraph{Answer 4:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 5:}
+Write a procedure, called \texttt{compose}, that takes two one-place
+functions \texttt{f} and \texttt{g} as arguments. It should return a
+new function, the composition of its input functions, which computes
+\texttt{f(g(x))} when passed the argument \texttt{x}. For example, the
+function \texttt{Math/sqrt} (built in to Clojure from Java) takes the
+square root of a number, and the function \texttt{Math/abs} (also
+built in to Clojure) takes the absolute value of a number. If we make
+these functions Clojure native functions using \texttt{fn}, then
+\texttt{((compose Math/sqrt Math/abs) -36)} should return \texttt{6},
+because the square root of the absolute value of \texttt{-36} equals
+\texttt{6}.
+
+\begin{lstlisting}
+(defn sqrt [x] (Math/sqrt x))
+(defn abs [x] (Math/abs x))
+((compose sqrt abs) -36)
+\end{lstlisting}
+
+\paragraph{Answer 5:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 6:}
+  Write a procedure \texttt{first-two} that takes a list as its argument,
+  returning a two element list containing the first two elements of
+  the argument. For example, given the list \texttt{'(4 5 6)},
+  \texttt{first-two} should return \texttt{'(4 5)}.
+
+\paragraph{Answer 6:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 7:}
+Write a procedure \texttt{remove-second} that takes a list, and
+returns the same list with the second value removed. For example,
+given \texttt{(list 3 1 4)}, \texttt{remove-second} should return
+\texttt{(list 3 4)}
+
+\paragraph{Answer 7:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 8:}
+  Write a procedure \texttt{add-to-end} that takes in two arguments: a
+  list \texttt{l} and a value \texttt{x}. It should return a new list
+  which is the same as \texttt{l}, except that it has \texttt{x} as
+  its final element. For example, \texttt{(add-to-end (list 5 6 4) 0)}
+  should return \texttt{(list 5 6 4 0)}.
+
+\paragraph{Answer 8:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 9:}
+  Write a procedure, called \texttt{reverse}, that takes in a list, and returns
+  the reverse of the list. For example, if it takes in \texttt{'(a b c)}, it
+  will output \texttt{'(c b a)}.
+
+\paragraph{Answer 9:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 10:}
+  Write a procedure, called \texttt{count-to-1}, that takes a positive
+  integer \texttt{n}, and returns a list of the integers counting down
+  from \texttt{n} to \texttt{1}. For example, given input \texttt{3},
+  it will return \texttt{(list 3 2 1)}.
+
+\paragraph{Answer 10:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 11:}
+  Write a procedure, called \texttt{count-to-n}, that takes a positive
+  integer \texttt{n}, and returns a list of the integers from
+  \texttt{1} to \texttt{n}. For example, given input \texttt{3}, it
+  will return \texttt{(list 1 2 3)}. Hint: Use the procedures
+  \texttt{reverse} and \texttt{count-to-1} that you wrote in the
+  previous problems.
+
+\paragraph{Answer 11:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 12:}
+  Write a procedure, called \texttt{get-max}, that takes a list of numbers, and
+  returns the maximum value.
+
+\paragraph{Answer 12:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 13:}
+  Write a procedure, called \texttt{greater-than-five?}, that takes a
+  list of numbers, and replaces each number with \texttt{true} if the
+  number is greater than \texttt{5}, and \texttt{false} otherwise. For
+  example, given input \texttt{(list 5 4 7)}, it will return
+  \texttt{(list false false true)}. Hint: Use the function
+  \texttt{map} that we discussed in class.
+
+\paragraph{Answer 13:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 14:}
+Write a procedure, called \texttt{concat-three}, that takes three
+sequences (represented as lists), \texttt{x}, \texttt{y}, and
+\texttt{z}, and returns the concatenation of the three sequences. For
+example, given the sequences \texttt{(list 'a 'b)}, \texttt{(list 'b
+  'c)}, and \texttt{(list 'd 'e)}, the procedure should return
+\texttt{(list 'a 'b 'b 'c 'd 'e)}.
+
+\paragraph{Answer 13:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 15:}
+Write a procedure, called \texttt{sequence-to-power}, that takes a
+sequence (represented as a list) \texttt{x}, and a positive integer
+\texttt{n}, and returns the sequence \texttt{x}$^\texttt{n}$. For
+example, given the sequence \texttt{(list 'a 'b)} and the number
+\texttt{3}, the procedure should return \texttt{(list 'a 'b 'a 'b 'a
+  'b)}.
+
+\paragraph{Answer 15:} Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 16:}
+Define $L$ as a language containing a single sequence,
+$L={a}$. Write a procedure \texttt{in-L?} that takes a sequence
+(represented as a list), and decides if it is a member of the language
+$L^*$. That is, given a sequence $x$, the procedure should return
+\texttt{true} if and only if $x$ is a member of $L^*$, and
+\texttt{false} otherwise.
+
+\paragraph{Answer 16:}Answer in \texttt{victoria-pittard.clj}.
+
+\hrulefill
+\paragraph{Problem 17:}
+Let $A$ and $B$ be languages. We'll use $\textsc{concat}(A,B)$ to
+denote the concatenation of $A$ and $B$, in that order. Find an
+example of languages $A$ and $B$ such that
+$\textsc{concat}(A,B)=\textsc{concat}(B,A)$.
+
+\paragraph{Answer 17:} The concatenation of two languages A and B (in that order) is equivalent to the set of the possible concatenations of a morpheme from B to the end of a morpheme from A. For example, if language A includes \textit{\{a, b, c\}} and language B includes \textit{\{d, e\}}, then the concatenation of A and B includes \textit{\{ad, ae, bd, be, cd, ce\}}. As such, the concatenation of A and B equals the elements of A and B are identical, or in the event of an empty language A or B, as these are the only ways to guarantee each element behaves as both a suffix and prefix in each scenario, and thus identical roles when the opposite concatenation occurs (as is the case when A equals B) or that the concatenation yields an empty set (as is the case when either A or B is empty). For example, if A = \textit{\{a, b\}} and B = \textit{\{a, b\}}, both the concatenation of A and B and the concatenation of B and A will result in \textit{\{aa, ab, ba, bb\}}.
+
+\hrulefill
+\paragraph{Problem 18:}
+Let $A$ and $B$ be languages. Find an example of languages $A$ and $B$
+such that $\textsc{concat}(A,B)$ does not equal $\textsc{concat}(B,A)$
+
+\paragraph{Answer 18:} Following the same logic as shown above in \textbf{Answer 17}, an example of two languages such that the concatenation of A and B does not equal the concatenation of B and A is any case where A and B do not have identical elements and neither is an empty language. For example, if A = \textit{\{a, b\}}, and B = \textit{\{c, d\}}, then the concatenation of A and B is \textit{\{ac, ad, bc, bd\}}, while the concatenation of B and A is \textit{\{ca, cb, da, db\}}. These two concatenations are not equivalent.
+
+\hrulefill
+\paragraph{Problem 19:}
+Find an example of a language $L$ such that $L=L^2$,
+i.e. $L=\textsc{concat}(L,L)$.
+
+\paragraph{Answer 19:} Again following the logic shown in \textbf{Answer 17} regarding how concatenation of two languages work, there are some languages L that are equivalent to the concatenation of L to itself. An example would be the empty language, L = \textit{\{\}}, as the concatenation of two empty elements (with each element in this case being a language) is yet another empty element (empty language), thus identical to the initial elements (languages). 
+
+\hrulefill
+\paragraph{Problem 20:}
+Argue that the intersection of two languages $L$ and $L'$ is always
+contained in $L$.
+
+\paragraph{Answer 20:} In set theory, the intersection of two sets A and B is the set of all elements that exist in both A and B (effectively, the overlap). As a language is a set of grammatical strings, the same concept applies, and the intersection of L and L' is the set of all elements that exist in both L and L'. As the elements must exist in \textbf{both} L and L', it is trivial to conclude that each element must exist in L and L' as individual languages ass well, thus proving that the intersection of L and L' is always contained in L.
+
+\hrulefill
+\paragraph{Problem 21:}
+Let $L_1$, $L_2$, $L_3$, and $L_4$ be languages. Argue that the union
+of Cartesian products $(L_1 \times L_3) \cup (L_2 \times L_4)$ is
+always contained in the Cartesian product of unions
+$(L_1 \cup L_2) \times (L_3 \cup L_4)$.
+
+\paragraph{Answer 21:} 
+\paragraph{} To show that $(L_1 \times L_3) \cup (L_2 \times L_4)$ is always contained in $(L_1 \cup L_2) \times (L_3 \cup L_4)$, we must first consider the individual operations used. The union of two sets (with each set in this case being the Cartesian product of two languages) A and B is defined as the set composed of all elements existing in either A, B, or both A and B (in other words, existing in at least one of A and B). The Cartesian product of two sets (in this case, each set is a language) A and B is defined as the set of all possible ordered pairs of elements in A followed by elements in B. In the case of a language, these ordered pairs refer to a concatenation. Thus, the Cartesian product of two languages is the result of concatenating every string in the first language with every string in the second language. 
+\paragraph{} Given these definitions, we know that the Cartesian product of L1 and L3 is the set of all strings in L1 followed by all strings in L3 and the Cartesian product of L2 and L4 is the set of all strings in L2 followed by all strings in L4. Thus, the union of these two Cartesian products is the set of all strings in L1 followed by all strings in L3, and all strings in L2 followed by all strings in L4.
+\paragraph{} From the same definitions, we know that the union of L1 and L2 is the set of all strings in at least one of L1 and L2 (effectively, the strings in L1 and the strings in L2, removing possible overlap). Using the same logic, the union of L3 and L4 is the set of all strings in at least one of L3 and L4 (effectively, the strings in L3 and L4, removing possible overlap. Thus, the Cartesian product of these two unions is the set of all strings in either L1 or L2 followed by all strings in either L3 or L4. Logically, it is trivial to see that this is all strings in L1 followed by L3, all strings in L1 followed by L4, all strings in L2 followed by L3, and all strings in L2 followed by L4 by rephrasing the definition of a union. 
+\paragraph{} Given this, it is clear that $(L_1 \times L_3) \cup (L_2 \times L_4)$ is always contained in $(L_1 \cup L_2) \times (L_3 \cup L_4)$ as the set of all strings made by concatenating \textbf{L1 and L3} and all strings made by concatenating \textbf{L2 and L4} is trivially included in the set of all strings made by concatenating \textbf{L1 and L3}, L1 and L4, L2 and L3, and \textbf{L2 and L4} (removing repeats).
+
+\hrulefill
+\paragraph{Problem 22:}
+Let $L$ and $L'$ be finite languages. Show that the number of elements
+in the Cartesian product $L \times L'$ is always equal to the number
+of elements in $L' \times L$.
+
+\paragraph{Answer 22:} The concatenation of two languages is the set of all strings created by the concatenation of each string in one language (L) and each string in the other (L'). For example, if L = \textit{\{a, b, c\}} and L' = \textit{\{d, e, f\}}, the concatenation of L and L' is \textit{\{ad, ae, af, bd, be, bf, cd, ce, cf\}} and the concatenation of L' and L is \textit{\{da, db, dc, ea, eb, ec, fa, fb, fc\}}. In this example, it is clear that the cardinality of \textsc{L concat L'} and the cardinality of \textsc{L' concat L} are equal, as each element in one is the reverse of an element in the other, with no additional elements existing. The same holds true for all finite languages, as shown by the more rigorous proof below: 
+
+\begin{proof}
+As all languages can be represented as sets, to show that |LxL'| = |L'xL| it is sufficient to show that the cardinality of the cartesian product of two sets, A and B, is commutative. First, if either A or B is empty, then trivially the cartesian product of the two must be empty as well (as there is either nothing to concatenate to strings in A, or no strings to concatenate the strings in B to). In other words, if either A or B has a cardinality of zero, the cartesian product AxB has a cardinality of zero. Thus, \textit{|AxB| = |A| x |B|} in the base case where either A or B is empty. Otherwise, both |A| and |B| are greater than zero, and can be represented as x and y, respectively. Thus, the elements $a_i$ in A can be represented as $A = \{a_1, a_2, ..., a_x\}$, and the elements $b_i$ in B can be represented as $B = \{b_1, b_2, ..., b_y\}$. As the cartesian product of A and B is the set of ordered pairs made by concatenating $b_i$ onto $a_i$ for all values of i, \textsc{A x B} = $\{a_1b_1, a_1b_2, ..., a_1b_y, a_2b_{1::y}, ..., a_xb_{1::y}\}$. This makes it quite clear to see that for each of the x elements in A, there are y elements in \textsc{A x B} corresponding to the concatenation of each of the y elements of B to this element of A. From this, it is clear that \textsc{|A x B|} = \textsc{|A| x |B|}. As the cardinality of a set is always an integer, in both this case and in the base case where one of the sets is empty, this can be further reduced to \textsc{|A x B|} = $x*y$, where x and y are the cardinalities of A and B, respectively. As integer multiplication follows the commutative property, we can thus conclude that the cartesian product of two sets, and therefore of two languages, also follows the commutative property.
+\end{proof}
+
+\hrulefill
+\paragraph{Problem 23:}
+
+Suppose that the concatenation of a language L is equal to itself:
+$\texttt{concat}(L,L) = L$. Show that $L$ is either the empty set or
+an infinite language. (Remember that the empty set contains the null
+string.)
+
+\paragraph{Answer 23:} Let L = \textit{\{a\}} serve as our base case where L is not empty (effective, because it has one element). The concatenation of L to itself here yields \textit{\{aa\}}, which is not equivalent to \textit{\{a\}}. Given a's role as a placeholder here, it is sufficient to say that a language containing one string cannot be equivalent to the cartesian product of it with itself. The only way for \textit{aa} to also exist in L, not just \textsc{L concat L}, is if it also has the elements of L concatenated to it, causing \textit{aaa} and \textit{aaaa} to also exist in \textsc{L concat L}. The only way for \textit{aaa} and \textit{aaaa} to also exist in L (required for equivalency) is if it also has the elements of L concatenated to it, causing more elements \textit{aaaa}, \textit{aaaaa}, \textit{aaaaaa}, \textit{aaaaaaa}, and \textit{aaaaaaaa} to also exist in L. This pattern continues, and the only way all of this exponentially increasing number of elements in both L and \textsc{L concat L} is if the set is infinite, as no base case is reached by increasing the number of elements in both L and \textsc{L concat L}. Thus, the language L must either be infinite or the empty language (as shown in \textbf{Answer 19}).
+
+\end{document}
