@@ -1,0 +1,463 @@
+\documentclass[10pt]{article}
+ 
+\usepackage[margin=1in]{geometry} 
+\usepackage{amsmath,amsthm,amssymb, graphicx, multicol, array}
+ \usepackage{listings}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{url}
+\usepackage[variablett]{lmodern}
+\usepackage{hyperref}
+
+\lstset{
+ basicstyle=\ttfamily,
+ columns=fullflexible,
+ upquote,
+ keepspaces,
+ literate={*}{{\char42}}1
+ {-}{{\char45}}1
+}
+
+\begin{document}
+ 
+\title{LING/COMP 445/645\\Problem Set 2}
+\date{}
+\maketitle
+
+
+There are several types of questions below. For programming questions,
+please put your answers into a file called
+\texttt{pittard-victoria.clj}. Be careful to follow the instructions
+exactly and be sure that all of your function definitions use the
+precise names, number of inputs and input types, and output types as
+requested in each question.
+
+To do the computational problems, we recommend that you install
+Clojure on your local machine and write and debug the answers to each
+problem in a local copy of \texttt{pittard-victoria.clj}. You can
+find information about installing and using Clojure here
+\url{https://clojure.org/}.
+
+For questions involving answers in English or mathematics or a
+combination of the two, put your answers to the question in an
+\textbf{Answer} section like in the example below. You can find more
+information about \LaTeX\ here \url{https://www.latex-project.org/}.
+
+Once you have answered the question, please compile your copy of this
+\LaTeX\ document into a PDF and submit (i) the compiled PDF (ii) the
+raw \LaTeX\ file and (iii) your \texttt{pittard-victoria.clj} file
+via email to \emph{both}
+\href{mailto:timothy.odonnell@mcgill.ca}{timothy.odonnell@mcgill.ca}
+and
+\href{mailto:savanna.willerton@mail.mcgill.ca}\href{savanna.willerton@mail.mcgill.ca}.
+The problem is set is due before 16:05 on Monday, October 28, 2019.
+
+\hrulefill
+\paragraph{Problem 0:}
+This is an example question using some fake math like this
+$L=\sum_0^{\infty} \mathcal{G} \delta_x$.
+
+\paragraph{Answer 0:} Put your answer right under the question like
+this $L=\sum_0^{\infty} \mathcal{G} \delta_x$.
+
+\hrulefill
+\paragraph{Problem 1:}
+
+In these exercises, we are going to be processing some natural
+linguistic data, the first paragraph of Moby Dick. We will first write
+some procedures that help us to manipulate this corpus. We will then
+start analyzing this data using some probabilistic models.
+
+We will start by defining the variable \texttt{moby-word-tokens},
+which is a list containing all of the words from our corpus.
+
+\begin{lstlisting}
+(def moby-word-tokens '(CALL me Ishmael . Some years ago never mind
+     how long precisely having little or no money in my purse , and
+     nothing particular to interest me on shore , I thought I would
+     sail about a little and see the watery part of the world .  It is
+     a way I have of driving off the spleen , and regulating the
+     circulation . Whenever I find myself growing grim about the mouth
+     whenever it is a damp , drizzly November in my soul whenever I
+     find myself involuntarily pausing before coffin warehouses , and
+     bringing up the rear of every funeral I meet and especially
+     whenever my hypos get such an upper hand of me , that it requires
+     a strong moral principle to prevent me from deliberately stepping
+     into the street , and methodically knocking people's hats off
+     then , I account it high time to get to sea as soon as I can .
+     This is my substitute for pistol and ball . With a philosophical
+     flourish Cato throws himself upon his sword I quietly take to the
+     ship .  There is nothing surprising in this . If they but knew it
+     , almost all men in their degree , some time or other , cherish
+     very nearly the same feelings toward the ocean with me .))
+\end{lstlisting}
+
+Below we have defined the function \texttt{member-of-list}, which
+takes two arguments, \texttt{w} and \texttt{l}. The function returns
+\texttt{true} if the element \texttt{w} is a member of the list
+\texttt{l}, and \texttt{false} otherwise. For example, if \texttt{w}
+equals \texttt{'the} and \texttt{l} equals \texttt{(list 'the 'man
+  'is)}, then the function will return \texttt{true}. In contrast, if
+\texttt{w} equals \texttt{'the} and \texttt{l} equals \texttt{(list
+  'man 'is)}, then the function will return false.
+
+\begin{lstlisting}
+(defn member-of-list? [w l]
+  (if (empty? l)
+    false
+    (if (= w (first l))
+      true
+      (member-of-list? w (rest l)))))
+\end{lstlisting}
+
+Below we have defined the skeleton for the function
+\texttt{get-vocabulary}. This function takes two arguments,
+\texttt{word-tokens} and \texttt{vocab}. \texttt{word-tokens} is a
+list of words, and the function should return the list of unique words
+occuring in word-tokens. This list of unique words is called a
+vocabulary. For example, if word-tokens is equal to \texttt{(list 'the
+  'man 'is 'man 'the)}, then get-vocabulary should return (list 'the
+'man 'is).
+
+Fill in the missing parts of this function. When you call
+\texttt{(get-vocabulary moby-word-tokens '())}, you will get back a
+list of all of the unique words occuring in moby-word-tokens. Give
+this the name \texttt{moby-vocab}.
+
+\begin{lstlisting}
+;;(defn get-vocabulary [word-tokens vocab]
+;;  (if (empty? word-tokens)
+;;      vocab
+;;      (if (member-of-list? ;;finish this line
+;;          (get-vocabulary ;;finish this line
+;;          (get-vocabulary ;;finish this line
+\end{lstlisting}
+
+\paragraph{Answer 1:} Answer in \texttt{pittard-victoria.clj}.
+
+\hrulefill
+\paragraph{Problem 2:}
+
+Define a function \texttt{get-count-of-word}. This function should
+take three arguments, \texttt{w}, \texttt{word-tokens}, and
+\texttt{count}. \texttt{w} is a word and \texttt{word-tokens} is a
+list of words. When you call \texttt{(get-count-of-word w word-tokens
+  0)}, the function should return the number of occurrences of the
+word \texttt{w} in the list \texttt{word-tokens}. For example, if
+word-tokens equals \texttt{(list 'the 'the 'man)}, and \texttt{w}
+equals \texttt{'the}, then the function should return \texttt{2}. If
+\texttt{word-tokens} is the same, but \texttt{w} equals \texttt{'man},
+then the function should return \texttt{1}.
+
+\begin{lstlisting}
+;;(defn get-count-of-word [w word-tokens count]
+  ;;fill this in
+\end{lstlisting}
+
+Below we have defined the function \texttt{get-word-counts}, which
+takes two arguments, \texttt{vocab} and
+\texttt{word-tokens}. \texttt{vocab} is assumed to be a list of the
+unique words that occur in the list \texttt{word-tokens}. The function
+returns the number of times each word in vocab occurs in
+word-tokens. For example, suppose \texttt{vocab} equals \texttt{(list
+  'man 'the 'is)}, and \texttt{word-tokens} equals \texttt{(list 'the
+  'man 'is 'is)}. Then the function would return \texttt{(list 1 1
+  2)}, corresponding to the number of times \texttt{'man},
+\texttt{'the}, and \texttt{'is} occur in \texttt{word-tokens}.
+
+\begin{lstlisting}
+(defn get-word-counts [vocab word-tokens]
+  (let [count-word (fn [w] 
+                     (get-count-of-word w word-tokens 0))]
+    (map count-word vocab)))
+\end{lstlisting}
+
+\paragraph{Answer 2:} Answer in
+\texttt{pittard-victoria.clj}.
+
+\hrulefill
+\paragraph{Problem 3:}
+
+Use the function \texttt{get-word-counts}, and the other variables we have
+defined, to define a variable \texttt{moby-word-frequencies}. This variable
+should contain the number of times each word in \texttt{moby-vocab} occurs in
+\texttt{moby-word-tokens}.
+
+In class we defined the functions \texttt{normalize}, \texttt{flip},
+and \texttt{sample-categorical}. These functions are very useful for
+us, and are included below.
+
+\begin{lstlisting}
+(defn flip [p]
+  (if (< (rand 1) p)
+    true
+    false))
+
+(defn normalize [params]
+  (let [sum (apply + params)]
+    (map (fn [x] (/ x sum)) params)))
+
+
+(defn sample-categorical [outcomes params]
+  (if (flip (first params))
+    (first outcomes)
+    (sample-categorical (rest outcomes) 
+			(normalize (rest params)))))
+\end{lstlisting}
+
+Let's define a function that returns a particular probability
+distribution, the uniform distribution. The uniform distribution is
+the distribution which assigns equal probability to every possible
+outcome.
+  
+The function \texttt{uniform-distribution} takes a single argument,
+\texttt{outcomes}, which is a list of length n. The function should
+return a list containing the number \texttt{1/n} repeated n times. For
+example, if outcomes equals \texttt{(list 'the 'a 'every)}, then this
+function will return \texttt{(list 1/3 1/3 1/3)}. This list can be
+interpreted as a probability distribution over the outcomes, which
+assigns equal probability to each of them.
+
+\begin{lstlisting}
+(defn create-uniform-distribution [outcomes]
+  (let [num-outcomes (count outcomes)]
+    (map (fn [x] (/ 1 num-outcomes))
+	 outcomes)))
+\end{lstlisting}
+
+
+\paragraph{Answer 3:} Answer in \texttt{pittard-victoria.clj}.
+
+\hrulefill
+\paragraph{Problem 4:}
+
+Using \texttt{create-uniform-distribution} and
+\texttt{sample-categorical}, write a function
+\texttt{sample-uniform-BOW-sentence} that takes a number \texttt{n}
+and a list \texttt{vocab}, and returns a sentence of length
+\texttt{n}. Each word in the sentence should be generated
+independently from the uniform distribution over vocab. For example,
+given \texttt{n} equal to \texttt{4} and \texttt{vocab} equal to
+\texttt{(list 'the 'a 'every)}, a possible return value for this
+function is \texttt{(list 'a 'the 'the 'a)}.
+
+Note that this is a bag of words model, as defined in class. That is,
+we assume every element of the list is generated independently. We
+will call this the uniform bag of words model.
+
+\paragraph{Answer 4:} Answer in
+\texttt{pittard-victoria.clj}.
+
+\hrulefill
+\paragraph{Problem 5:}
+
+Define a function \texttt{compute-uniform-BOW-prob}, which takes two
+arguments, \texttt{vocab} and \texttt{sentence}. \texttt{vocab} is the
+list of all words in the vocabulary, and sentence is a list of
+observed words. The function should return the probability of the
+sentence according to the uniform bag of words model.
+
+For example, if \texttt{vocab} equals \texttt{(list 'the 'a 'every)},
+and sentence equals \texttt{(list 'every 'every)}, then the function
+should return $\frac{1}{9}$.
+
+\paragraph{Answer 5:} Answer in
+\texttt{pittard-victoria.clj}.
+
+\hrulefill
+\paragraph{Problem 6:}
+
+Using \texttt{sample-uniform-BOW-sentence} and \texttt{moby-vocab},
+sample a 3-word sentence from the vocabulary of our Moby Dick
+corpus. This will be a sample from the uniform bag of words model for
+this vocabulary. Repeat this process a number of times. For each of
+these 3-word sentences, use \texttt{compute-uniform-BOW-prob} to
+compute the probability of the sentence according to the uniform bag
+of words model. What do you notice? Why is this true?
+
+\paragraph{Answer 6:} Coding portion of answer in 
+\texttt{pittard-victoria.clj}, remainder here:
+\paragraph{} For this question, I defined variables uni-moby-sent-\textit{n}, where \textit{n} is a number 1-5, thus generating 5 separate sentences as stipulated. Then, by calling \texttt{compute-uniform-BOW-prob} on \texttt{moby-vocab} and the corresponding uni-moby-sent-n variable, I defined variables uni-moby-sent-prob-\textit{n}, with \textit{n} again being a number 1-5 to correspond to the sentence it represents the probability of. Each time I run the code, there are thus 5 sentences generated (each having three words), each with an individually calculated probability. To answer this question, I will use the results obtained by running once the commented out section on lines 179-194 of \texttt{pittard-victoria.clj} (ignoring the probabilities used for question 11, for now). 
+
+\paragraph{} The results were as follows:
+\begin{center}
+    \begin{tabular}{|c|c|}
+    \hline
+    Sentence & Probability\\ & \\
+    \hline
+    (ship driving cherish) & $\frac{1}{2744000}$\\ & \\
+    \hline
+    (how every watery) & $\frac{1}{2744000}$\\ & \\
+    \hline
+    (toward whenever can) & $\frac{1}{2744000}$\\ & \\
+    \hline
+    (such it deliberately) & $\frac{1}{2744000}$\\ & \\
+    \hline
+    (a deliberately mouth) & $\frac{1}{2744000}$\\ & \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\paragraph{}It is easy to observe here that using the current uniform bag of words model, the probability of each three word sentence is the same. This makes sense because in a uniform distribution, the probability of each word occurring is the same, specifically equaling $\frac{1}{len}$ where $len$ is the number of words in the vocabulary. Thus, as the probability of three words occurring is the product of the probabilities of the individual word occurring once, the probability of any three words occurring is $\frac{1}{len} * \frac{1}{len} * \frac{1}{len}$, which, as $len$ does not change (the vocabulary itself is constant), is independent of what the words are, and will be the same no matter which three words appear in the sentences.  
+
+\hrulefill
+\paragraph{Problem 7:}
+
+In class we looked at a more general version of the bag of words
+model, in which different words in the vocabulary can be assigned
+different probabilities. We defined a function \texttt{sample-BOW-sentence},
+which returns a sentence sampled from the bag of words model that we
+have specified. Below we have included a slight variant of the
+function which we defined in class. Previously the variables
+vocabulary and probabilities were defined outside of the function. In
+the current version, they are passed in as arguments. The function is
+identical otherwise.
+
+\begin{lstlisting}
+(defn sample-BOW-sentence [len vocabulary probabilities]
+  (if (= len 0)
+    '()
+    (cons (sample-categorical vocabulary probabilities)
+	  (sample-BOW-sentence (- len 1) vocabulary probabilities))))
+\end{lstlisting}
+
+The function \texttt{sample-BOW-sentence} allows us to sample a
+sentence given arbitrary probabilities for the words in our
+vocabulary. Let's make use of this power and define a distribution
+over the vocabulary which is better than the uniform distribution. We
+will use the word frequencies for our Moby Dick corpus to
+\emph{estimate} a better distribution.
+  
+Above we defined the variable \texttt{moby-word-frequencies}, which
+contains the frequency of every word that occurs in our Moby Dick
+corpus. Using \texttt{normalize} and \texttt{moby-word-frequencies},
+define a variable \texttt{moby-word-probabilities}. This variable
+should contain probabilities for every word in \texttt{moby-vocab}, in
+proportion to its frequency in the text. A word which occurs 2 times
+should receive twice as much probability as a word which occurs 1
+time.
+
+\paragraph{Answer 7:} Answer in
+\texttt{pittard-victoria.clj}.
+
+\hrulefill
+\paragraph{Problem 8:}
+
+Using \texttt{sample-BOW-sentence}, sample a 3-word sentence from a
+bag of words model, in which the probabilities are set to be those in
+\texttt{moby-word-probabilities}. Repeat this process a number of
+times, and write down the sentences that you collect through this
+process.
+
+\paragraph{Answer 8:} Coding portion of answer in
+\texttt{pittard-victoria.clj}, remainder (output sentences) here:
+
+\paragraph{} For this question, I defined a variable \texttt{moby-sent} to equal a sentence generated by calling \texttt{sample-BOW-sentence} with parameters $3$, \texttt{moby-vocab} (previously generated on line 83 using \texttt{get-vocabulary}), and \texttt{moby-word-probabilities} (generated by normalizing \texttt{moby-word-frequencies}, which was previously generated using \texttt{get-word-counts} on line 84). By running the code several times, I obtained a sample of several sentences, as follows:
+
+\begin{center}
+    \begin{tabular}{c}
+         (a next a)\\
+         (before I find)\\
+         (warehouses me thought)\\
+         (. get methodically)\\
+         (to circulation but)\\
+         (long interest and)\\
+         (the their world)\\
+         (in in of)\\
+    \end{tabular}
+\end{center}
+
+\paragraph{} Evidently, a sentence is randomly sampled, and it is likely that the model is better as common words (having a high probability) appear to occur more frequently (as words such as "a" and "in" occur multiple times in the same sentence). However, this is still a small sample size.
+
+\hrulefill
+\paragraph{Problem 9:}
+
+Define a function \texttt{lookup-probability}, which takes three
+arguments, \texttt{w}, \texttt{outcomes}, and
+\texttt{probs}. \texttt{probs} represents a probability distribution
+over the elements of \texttt{outcomes}. For example, if outcomes is
+\texttt{(list 'the 'a 'every)}, then \texttt{probs} may be equal to
+\texttt{(list 0.2 0.5 0.3)}. The first number in \texttt{probs} is the
+probability of the first element of outcomes, the second number in
+probs is the probability of the second element of outcomes, and so on.
+
+\texttt{lookup-probability} should look up the probability of the
+element \texttt{w}. For example, if \texttt{w} equals \texttt{'the},
+then look-up probability should return \texttt{0.2}. If \texttt{w}
+equals \texttt{'a}, then \texttt{lookup-probability} should return
+\texttt{0.5}.
+
+Below we have defined the function \texttt{product}. This function takes a list
+of numbers as its argument, and returns the product of these numbers.
+
+\begin{lstlisting}
+(defn product [l]
+  (apply * l))
+\end{lstlisting}
+
+\paragraph{Answer 9:} Answer in
+\texttt{pittard-victoria.clj}.
+
+\hrulefill
+\paragraph{Problem 10:}
+
+Using \texttt{lookup-probability} and \texttt{product}, define a
+function \texttt{compute-BOW-prob} which takes three arguments,
+\texttt{sentence}, \texttt{vocabulary}, and
+\texttt{probabilities}. The arguments \texttt{vocabulary} and
+\texttt{probabilities} are used to define a bag of words model with
+the associated probability distribution over vocabulary words. The
+function should compute the probability of the sentence (which is a
+list of words) according to the bag of words model.
+
+This function is a generalization of the function
+\texttt{compute-uniform-BOW-prob} that you defined above.
+
+\paragraph{Answer 10:} Answer in
+\texttt{pittard-victoria.clj}.
+
+\hrulefill
+\paragraph{Problem 11:}
+
+In problem 8, you collected a number of 3-word sentences. These
+sentences were generated from a bag of words model in which the
+probabilities were set to those in \texttt{moby-word-probabilities},
+which reflect the relative frequency of the words in the Moby Dick
+corpus. Use \texttt{compute-BOW-prob} to compute the probability of
+these sentences according to the bag of words model. How does your
+answer differ from problem 6?
+
+Choose one of the 3-word sentences that you have generated. Can you
+construct a different sentence which has the same probability
+according to the bag of words model? When computing the probability of
+a sentence under a bag of words model, what information about the
+sentence suffices to compute this probability?
+
+\paragraph{Answer 11:} Coding portion of answer in 
+\texttt{pittard-victoria.clj}, remainder here:
+
+\paragraph{} As explained in \textbf{Answer 6}, five 3-word sentences were generated, and according to the uniform bag of words model used to generate them, they had equal probabilities of occurring. Using \texttt{compute-BOW-prob} to generate the probabilities the sentences occur according to the new bag of words model (based on \texttt{moby-word-probabilities}). The results are shown in the table below (where the probabilities of each sentence occurring can be seen next to the previously calculated probabilities):
+
+\begin{center}
+    \begin{tabular}{|c|c|c|}
+    \hline
+    Sentence & Old Probability & New Probability\\ & &  \\
+    \hline
+    (ship driving cherish) & $\frac{1}{2744000}$ & $\frac{1}{9129329}$\\ & & \\
+    \hline
+    (how every watery) & $\frac{1}{2744000}$ & $\frac{1}{9129329}$\\ & & \\
+    \hline
+    (toward whenever can) & $\frac{1}{2744000}$ & $\frac{3}{9129329}$\\ & & \\
+    \hline
+    (such it deliberately) & $\frac{1}{2744000}$ & $\frac{4}{9129329}$\\ & & \\
+    \hline
+    (a deliberately mouth) & $\frac{1}{2744000}$ & $\frac{5}{9129329}$\\ & & \\
+    \hline
+    \end{tabular}
+\end{center}
+
+\paragraph{} Evidently, the new and old probabilities differ from each other, both in value and pattern. Now, the probabilities of each unique sentence occurring do \textit{not} all equal each other.
+
+\paragraph{} The results also show that it is possible to construct a different sentence with the same probability as one of the sampled sentences (in the table above) according to the bag of words model. In fact, the specific sentences sampled are evidence of this, as the sentence \texttt{(ship driving cherish)} and the sentence \texttt{(how every watery)} both have a probability of $\frac{1}{9129329}$, as the product of the probabilities of each word occurring in the two sentences is equal. When computing the probability of a sentence occurring under a bag of words model, we need the sentence whose probability we would like to compute, the frequencies (probabilities of occurring) of each word in the vocabulary occurring, in accordance with the model. From here, the probability of each word in the sentence (obtained from the frequency list or distribution) can be multiplied (as the probability of multiple events all occurring is the same as the product of the individual probabilities, assuming no dependencies - as is the case in a bag of words model) to yield the probability of the sentence occurring.
+
+\end{document}
